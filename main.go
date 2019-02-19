@@ -39,11 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	//log status
-	fmt.Println("OpenGL version:\t", gl.GoStr(gl.GetString(gl.VERSION)))
-	fmt.Println("GLSL version:\t", gl.GoStr(gl.GetString(gl.SHADING_LANGUAGE_VERSION)))
-	fmt.Println("GLFW version:\t", glfw.GetVersionString())
-	fmt.Println()
+	printDetail()
 
 	//new program
 	glfw.SwapInterval(1)
@@ -77,4 +73,10 @@ func main() {
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
+}
+func printDetail() {
+	fmt.Println("OpenGL version:\t", gl.GoStr(gl.GetString(gl.VERSION)))
+	fmt.Println("GLSL version:\t", gl.GoStr(gl.GetString(gl.SHADING_LANGUAGE_VERSION)))
+	fmt.Println("GLFW version:\t", glfw.GetVersionString())
+	fmt.Println()
 }
