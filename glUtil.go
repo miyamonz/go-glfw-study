@@ -6,21 +6,21 @@ import (
 	"strings"
 )
 
-func newProgram(vertexShaderSource, fragmentShaderSource string) (uint32, error) {
-	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
+func newProgram(vSrc, fSrc string) (uint32, error) {
+	vShader, err := compileShader(vSrc, gl.VERTEX_SHADER)
 	if err != nil {
 		return 0, err
 	}
 
-	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
+	fShader, err := compileShader(fSrc, gl.FRAGMENT_SHADER)
 	if err != nil {
 		return 0, err
 	}
 
 	program := gl.CreateProgram()
 
-	gl.AttachShader(program, vertexShader)
-	gl.AttachShader(program, fragmentShader)
+	gl.AttachShader(program, vShader)
+	gl.AttachShader(program, fShader)
 
 	gl.BindAttribLocation(program, 0, gl.Str("position\x00"))
 	gl.BindFragDataLocation(program, 0, gl.Str("fragment\x00"))
@@ -36,11 +36,11 @@ func newProgram(vertexShaderSource, fragmentShaderSource string) (uint32, error)
 		log := strings.Repeat("\x00", int(logLength+1))
 		gl.GetProgramInfoLog(program, logLength, nil, gl.Str(log))
 
-		return 0, fmt.Errorf("failed to link program: %v", log)
+		return 0, fmt.Errorf("failed to link program: \n%v", log)
 	}
 
-	gl.DeleteShader(vertexShader)
-	gl.DeleteShader(fragmentShader)
+	gl.DeleteShader(vShader)
+	gl.DeleteShader(fShader)
 
 	return program, nil
 }
