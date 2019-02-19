@@ -6,7 +6,7 @@ import (
 
 func readFile(path string) string {
 	// ファイルを読み出し用にオープン
-	bytes, err := ioutil.ReadFile(path);
+	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}

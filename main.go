@@ -40,9 +40,9 @@ func main() {
 	// buffer
 	var rectPoints = []Vertex{
 		{-0.5, -0.5},
-		{ 0.5, -0.5},
-		{ 0.5,  0.5},
-		{-0.5,  0.5},
+		{0.5, -0.5},
+		{0.5, 0.5},
+		{-0.5, 0.5},
 	}
 	rect := NewShape(rectPoints)
 	defer rect.Delete()

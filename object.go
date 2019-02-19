@@ -12,17 +12,17 @@ type Object struct {
 
 func NewObject(points []Vertex) Object {
 	vcount := len(points)
-	if vcount == 0  {
+	if vcount == 0 {
 		panic("points length is zero")
 	}
-  size := int32(len((points)[0]))
+	size := int32(len((points)[0]))
 	obj := Object{}
 	gl.GenVertexArrays(1, &obj.vao)
 	gl.BindVertexArray(obj.vao)
 
 	gl.GenBuffers(1, &obj.vbo)
 	gl.BindBuffer(gl.ARRAY_BUFFER, obj.vbo)
-	gl.BufferData(gl.ARRAY_BUFFER, vcount * int(size) * 4, gl.Ptr(points), gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, vcount*int(size)*4, gl.Ptr(points), gl.STATIC_DRAW)
 	gl.VertexAttribPointer(0, size, gl.FLOAT, false, 0, gl.PtrOffset(0))
 	gl.EnableVertexAttribArray(0)
 
@@ -37,7 +37,6 @@ func (obj *Object) Delete() {
 func (obj *Object) bind() {
 	gl.BindVertexArray(obj.vao)
 }
-
 
 type Shape struct {
 	object Object
