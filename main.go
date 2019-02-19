@@ -16,22 +16,9 @@ func init() {
 }
 func main() {
 	//init glfw
-	if err := glfw.Init(); err != nil {
-		panic(err)
-	}
+	window := initGLFW(windowWidth, windowHeight)
 	defer glfw.Terminate()
-
-	glfw.WindowHint(glfw.ContextVersionMajor, 4)
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-
-	// make an application window
-	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Hello", nil, nil)
-	if err != nil {
-		panic(err)
-	}
-	window.MakeContextCurrent()
+	defer window.Destroy()
 
 	//init gl
 	//windowがmakecontextしないとむり
@@ -42,7 +29,6 @@ func main() {
 	printDetail()
 
 	//new program
-	glfw.SwapInterval(1)
 	// Configure the vertex and fragment shaders
 	var vertexShader = readFile("./chapter_4/point.vert")
 	var fragmentShader = readFile("./chapter_4/point.frag")
@@ -74,6 +60,27 @@ func main() {
 		glfw.PollEvents()
 	}
 }
+
+func initGLFW(width, height int) *glfw.Window {
+	if err := glfw.Init(); err != nil {
+		panic(err)
+	}
+
+	glfw.WindowHint(glfw.ContextVersionMajor, 4)
+	glfw.WindowHint(glfw.ContextVersionMinor, 1)
+	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
+	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+
+	// make an application window
+	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Hello", nil, nil)
+	if err != nil {
+		panic(err)
+	}
+	window.MakeContextCurrent()
+	glfw.SwapInterval(1)
+	return window
+}
+
 func printDetail() {
 	fmt.Println("OpenGL version:\t", gl.GoStr(gl.GetString(gl.VERSION)))
 	fmt.Println("GLSL version:\t", gl.GoStr(gl.GetString(gl.SHADING_LANGUAGE_VERSION)))
