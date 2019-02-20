@@ -20,9 +20,10 @@ func init() {
 }
 func main() {
 	//init glfw
-	window := initGLFW(windowWidth, windowHeight)
-	window.SetSizeCallback(resize)
-	defer glfw.Terminate()
+	window,err := NewWindow(windowWidth, windowHeight)
+	if err != nil {
+		panic(err)
+	}
 	defer window.Destroy()
 
 	//init gl
@@ -76,11 +77,14 @@ func main() {
 	}
 }
 
+type IWindow interface {
+	SwapBuffers()
+}
 type Drawer interface {
 	Draw()
 }
 
-func draw(window *glfw.Window, program uint32, drawer Drawer) {
+func draw(window IWindow, program uint32, drawer Drawer) {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.UseProgram(program)
 
@@ -90,36 +94,10 @@ func draw(window *glfw.Window, program uint32, drawer Drawer) {
 	glfw.PollEvents()
 }
 
-func resize(w *glfw.Window, width, height int) {
-	// Retina Display must use FrameBufferSize
-	fw, fh := w.GetFramebufferSize()
-	gl.Viewport(0, 0, int32(fw), int32(fh))
-	// fmt.Printf("resize called. width: %d, height: %d, aspect: %f\n", int32(width), int32(height), aspect)
-	aspect = float32(width) / float32(height)
-}
-
-func initGLFW(width, height int) *glfw.Window {
-	if err := glfw.Init(); err != nil {
-		panic(err)
-	}
-
-	glfw.WindowHint(glfw.ContextVersionMajor, 4)
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-
-	// make an application window
-	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Hello", nil, nil)
-	if err != nil {
-		panic(err)
-	}
-	window.MakeContextCurrent()
-	glfw.SwapInterval(1)
-	return window
-}
 
 func printDetail() {
 	fmt.Println("OpenGL version:\t", gl.GoStr(gl.GetString(gl.VERSION)))
 	fmt.Println("GLSL version:\t", gl.GoStr(gl.GetString(gl.SHADING_LANGUAGE_VERSION)))
 	fmt.Println("GLFW version:\t", glfw.GetVersionString())
 }
+
