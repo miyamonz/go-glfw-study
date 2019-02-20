@@ -19,10 +19,10 @@ func NewWindow(w,h int) (*Window, error) {
 		return nil,err
 	}
 	ret := &Window{
-		win,
-		[2]float32{float32(w), float32(h)},
-		"",
-		100,
+		Window: win,
+		size: [2]float32{float32(w), float32(h)},
+		title: "",
+		scale: 100,
 	}
 	win.SetSizeCallback( func(win *glfw.Window, w,h int ) {
 		ret.resize(w,h)

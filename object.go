@@ -46,8 +46,8 @@ type Shape struct {
 func NewShape(points []Vertex) Shape {
 	obj := NewObject(points)
 	shape := Shape{
-		obj,
-		len(points),
+		object: obj,
+		vcount: len(points),
 	}
 
 	return shape
