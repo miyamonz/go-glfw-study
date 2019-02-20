@@ -8,9 +8,10 @@ import (
 
 type Window struct {
 	*glfw.Window
-	size [2]float32
+	size Vertex
 	title string
 	scale float32
+	location Vertex
 }
 
 func NewWindow(w,h int) (*Window, error) {
@@ -20,9 +21,10 @@ func NewWindow(w,h int) (*Window, error) {
 	}
 	ret := &Window{
 		Window: win,
-		size: [2]float32{float32(w), float32(h)},
+		size: Vertex{float32(w), float32(h)},
 		title: "",
 		scale: 100,
+		location: Vertex{0,0},
 	}
 	win.SetSizeCallback( func(win *glfw.Window, w,h int ) {
 		ret.resize(w,h)
