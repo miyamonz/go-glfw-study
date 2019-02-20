@@ -8,19 +8,12 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-const windowWidth = 600
-const windowHeight = 480
-
-var aspect = float32(windowWidth) / float32(windowHeight)
-var scale float32 = 100.0
-var size = [2]float32{float32(windowWidth), float32(windowHeight)}
-
 func init() {
 	runtime.LockOSThread()
 }
 func main() {
 	//init glfw
-	window,err := NewWindow(windowWidth, windowHeight)
+	window,err := NewWindow(600, 480)
 	if err != nil {
 		panic(err)
 	}
@@ -43,13 +36,12 @@ func main() {
 		panic(err)
 	}
 
-	var aspectLoc = gl.GetUniformLocation(program, gl.Str("aspect\x00"))
 	var sizeLoc = gl.GetUniformLocation(program, gl.Str("size\x00"))
 	var scaleLoc = gl.GetUniformLocation(program, gl.Str("scale\x00"))
 
 	w, h := window.GetSize()
 	fw, fh := window.GetFramebufferSize()
-	fmt.Println("aspect ratio: ", aspect)
+	fmt.Println("aspect ratio: ", window.getAspect())
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
@@ -67,8 +59,8 @@ func main() {
 	gl.Viewport(0, 0, int32(fw), int32(fh))
 
 	for !window.ShouldClose() {
-		gl.Uniform1f(aspectLoc, aspect)
-		gl.Uniform1f(scaleLoc, scale)
+		window.update()
+		gl.Uniform1f(scaleLoc, window.scale)
 
 		fw, fh := window.GetSize()
 		gl.Uniform2f(sizeLoc, float32(fw), float32(fh))

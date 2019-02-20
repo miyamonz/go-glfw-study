@@ -1,14 +1,16 @@
 package main
 
 import (
+	"math"
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 type Window struct {
 	*glfw.Window
-	width, height int
+	size [2]float32
 	title string
+	scale float32
 }
 
 func NewWindow(w,h int) (*Window, error) {
@@ -18,9 +20,9 @@ func NewWindow(w,h int) (*Window, error) {
 	}
 	ret := &Window{
 		win,
-		w,
-		h,
+		[2]float32{float32(w), float32(h)},
 		"",
+		100,
 	}
 	win.SetSizeCallback( func(win *glfw.Window, w,h int ) {
 		ret.resize(w,h)
@@ -40,8 +42,17 @@ func (win *Window) resize(width,height int) {
 	fw, fh := win.GetFramebufferSize()
 	gl.Viewport(0, 0, int32(fw), int32(fh))
 	// fmt.Printf("resize called. width: %d, height: %d, aspect: %f\n", int32(width), int32(height), aspect)
-	aspect = float32(width) / float32(height)
+	win.size[0] = float32(width)
+	win.size[1] = float32(height)
 }
+func (win *Window) getAspect() float32 {
+	return win.size[0] / win.size[1]
+}
+func (win *Window) update() {
+	a := float32(50 * math.Cos(sec() * 2 * math.Pi))
+	win.scale = 100 + a
+}
+
 
 func initGLFW(width, height int) (*glfw.Window,  error) {
 	if err := glfw.Init(); err != nil {
@@ -54,7 +65,7 @@ func initGLFW(width, height int) (*glfw.Window,  error) {
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
 	// make an application window
-	window, err := glfw.CreateWindow(windowWidth, windowHeight, "Hello", nil, nil)
+	window, err := glfw.CreateWindow(width, height, "Hello", nil, nil)
 	if err != nil {
 		return nil, err
 	}
