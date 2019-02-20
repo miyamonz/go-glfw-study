@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
@@ -51,8 +50,7 @@ func (win *Window) getAspect() float32 {
 	return win.size[0] / win.size[1]
 }
 func (win *Window) update() {
-	a := float32(50 * math.Cos(sec() * 2 * math.Pi))
-	win.scale = 100 + a
+	win.scale = 100
 }
 
 
