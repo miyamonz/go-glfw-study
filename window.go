@@ -38,6 +38,15 @@ func (win *Window) Destroy() {
 	glfw.Terminate()
 }
 
+func (win *Window) SwapBuffers() {
+	win.Window.SwapBuffers()
+	glfw.WaitEvents()
+	
+	x,y := win.Window.GetCursorPos()
+	win.location[0] =  float32(x) * 2 / win.size[0] - 1
+	win.location[1] =  1 - float32(y) * 2 / win.size[1]
+}
+ 
 func (win *Window) resize(width,height int) {
 	// Retina Display must use FrameBufferSize
 	fw, fh := win.GetFramebufferSize()

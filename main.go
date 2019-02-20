@@ -38,6 +38,7 @@ func main() {
 
 	var sizeLoc = gl.GetUniformLocation(program, gl.Str("size\x00"))
 	var scaleLoc = gl.GetUniformLocation(program, gl.Str("scale\x00"))
+	var locationLoc = gl.GetUniformLocation(program, gl.Str("location\x00"))
 
 	w, h := window.GetSize()
 	fw, fh := window.GetFramebufferSize()
@@ -61,6 +62,7 @@ func main() {
 	for !window.ShouldClose() {
 		window.update()
 		gl.Uniform1f(scaleLoc, window.scale)
+		gl.Uniform2f(locationLoc, window.location[0], window.location[1])
 
 		fw, fh := window.GetSize()
 		gl.Uniform2f(sizeLoc, float32(fw), float32(fh))
