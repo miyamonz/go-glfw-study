@@ -51,14 +51,24 @@ func main() {
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
 
 	for !window.ShouldClose() {
-		gl.Clear(gl.COLOR_BUFFER_BIT)
-		gl.UseProgram(program)
 
-		rect.Draw()
 
-		window.SwapBuffers()
-		glfw.PollEvents()
+		draw(window, program, &rect)
 	}
+}
+
+type Drawer interface {
+	Draw()
+}
+
+func draw(window *glfw.Window, program uint32, drawer Drawer) {
+	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.UseProgram(program)
+
+	drawer.Draw()
+
+	window.SwapBuffers()
+	glfw.PollEvents()
 }
 
 func initGLFW(width, height int) *glfw.Window {
