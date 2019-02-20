@@ -30,8 +30,8 @@ func main() {
 
 	//new program
 	// Configure the vertex and fragment shaders
-	var vertexShader = readFile("./chapter_4/point.vert")
-	var fragmentShader = readFile("./chapter_4/point.frag")
+	var vertexShader = readFile("./shaders/point.vert")
+	var fragmentShader = readFile("./shaders/point.frag")
 	program, err := newProgram(vertexShader, fragmentShader)
 	if err != nil {
 		panic(err)
