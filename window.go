@@ -70,6 +70,11 @@ func (win *Window) getAspect() float32 {
 func (win *Window) update() {
 }
 
+func (win *Window) ShouldClose() bool {
+	pressESC := win.Window.GetKey(glfw.KeyEscape) == glfw.Press
+	return win.Window.ShouldClose() || pressESC
+}
+
 func initGLFW(width, height int) (*glfw.Window, error) {
 	if err := glfw.Init(); err != nil {
 		return nil, err
