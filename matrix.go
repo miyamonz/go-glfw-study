@@ -8,8 +8,8 @@ type Matrix struct {
 	matrix [16]float32
 }
 
-func (m *Matrix) data() [16]float32 {
-	return m.matrix
+func (m *Matrix) data() *[16]float32 {
+	return &m.matrix
 }
 func (m *Matrix) String() string {
 	a := m.matrix
@@ -55,21 +55,21 @@ func (m1 *Matrix) mult(m2 *Matrix) Matrix {
 	return t
 }
 
-func translate(x, y, z float32) Matrix {
+func translate(v Vec3) Matrix {
 	t := Matrix{}
 	t.loadIdentity()
-	t.matrix[12] = x
-	t.matrix[13] = y
-	t.matrix[14] = z
+	t.matrix[12] = v[0]
+	t.matrix[13] = v[1]
+	t.matrix[14] = v[2]
 	return t
 }
 
-func scale(x, y, z float32) Matrix {
+func scale(v Vec3) Matrix {
 	t := Matrix{}
 	t.loadIdentity()
-	t.matrix[0] = x
-	t.matrix[5] = y
-	t.matrix[10] = z
+	t.matrix[0] = v[0]
+	t.matrix[5] = v[1]
+	t.matrix[10] = v[2]
 	return t
 }
 
