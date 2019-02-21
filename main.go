@@ -8,6 +8,21 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
+var octahedronVertex []Vec3 = []Vec3{
+	{0, 1, 0},
+	{-1, 0, 0},
+	{0, -1, 0},
+	{1, 0, 0},
+	{0, 1, 0},
+	{0, 0, 1},
+	{0, -1, 0},
+	{0, 0, -1},
+	{-1, 0, 0},
+	{0, 0, 1},
+	{1, 0, 0},
+	{0, 0, -1},
+}
+
 func init() {
 	runtime.LockOSThread()
 }
@@ -45,14 +60,8 @@ func main() {
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
-	var rectPoints = []Vertex{
-		{-0.5, -0.5},
-		{0.5, -0.5},
-		{0.5, 0.5},
-		{-0.5, 0.5},
-	}
-	rect := NewShape(rectPoints)
-	defer rect.Delete()
+	octa := NewShape(octahedronVertex)
+	defer octa.Delete()
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
@@ -62,9 +71,8 @@ func main() {
 		window.update()
 
 		//scale matrix
-		size := window.size
 		s := window.scale * 2
-		scaleMat := scale(Vec3{s / size[0], s / size[1], 1})
+		scaleMat := scale(Vec3{s, s, s})
 
 		//translate matrix
 		location := window.location
@@ -79,13 +87,13 @@ func main() {
 		model := transMat.mult(&scaleMat)
 		modelView := view.mult(&model)
 
-		fovy := s * 0.01
+		fovy := float32(1)
 		aspect := window.getAspect()
 		projection := perspective(fovy, aspect, 1, 10)
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
 
-		draw(window, program, &rect)
+		draw(window, program, &octa)
 	}
 }
 

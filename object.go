@@ -10,7 +10,7 @@ type Object struct {
 	vao, vbo uint32
 }
 
-func NewObject(points []Vertex) Object {
+func NewObject(points []Vec3) Object {
 	vcount := len(points)
 	if vcount == 0 {
 		panic("points length is zero")
@@ -43,7 +43,7 @@ type Shape struct {
 	vcount int
 }
 
-func NewShape(points []Vertex) Shape {
+func NewShape(points []Vec3) Shape {
 	obj := NewObject(points)
 	shape := Shape{
 		object: obj,

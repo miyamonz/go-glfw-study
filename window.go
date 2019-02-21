@@ -23,7 +23,7 @@ func NewWindow(w, h int) (*Window, error) {
 		Window:   win,
 		size:     Vertex{float32(w), float32(h)},
 		title:    "",
-		scale:    100,
+		scale:    1,
 		location: Vertex{0, 0},
 	}
 	win.SetSizeCallback(func(win *glfw.Window, w, h int) {
@@ -89,7 +89,7 @@ func (win *Window) resize(width, height int) {
 	win.size[1] = float32(height)
 }
 func (win *Window) wheel(xoff, yoff float64) {
-	win.scale += float32(yoff)
+	win.scale += float32(yoff) / 10
 }
 func (win *Window) keyboard(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 	win.keyStatus = action
