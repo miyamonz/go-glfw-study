@@ -7,26 +7,26 @@ import (
 
 type Window struct {
 	*glfw.Window
-	size Vertex
-	title string
-	scale float32
+	size     Vertex
+	title    string
+	scale    float32
 	location Vertex
 }
 
-func NewWindow(w,h int) (*Window, error) {
-	win,err :=  initGLFW(w,h)
+func NewWindow(w, h int) (*Window, error) {
+	win, err := initGLFW(w, h)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	ret := &Window{
-		Window: win,
-		size: Vertex{float32(w), float32(h)},
-		title: "",
-		scale: 100,
-		location: Vertex{0,0},
+		Window:   win,
+		size:     Vertex{float32(w), float32(h)},
+		title:    "",
+		scale:    100,
+		location: Vertex{0, 0},
 	}
-	win.SetSizeCallback( func(win *glfw.Window, w,h int ) {
-		ret.resize(w,h)
+	win.SetSizeCallback(func(win *glfw.Window, w, h int) {
+		ret.resize(w, h)
 
 	} )
 	return ret, nil
@@ -46,8 +46,8 @@ func (win *Window) SwapBuffers() {
 	win.location[0] =  float32(x) * 2 / win.size[0] - 1
 	win.location[1] =  1 - float32(y) * 2 / win.size[1]
 }
- 
-func (win *Window) resize(width,height int) {
+
+func (win *Window) resize(width, height int) {
 	// Retina Display must use FrameBufferSize
 	fw, fh := win.GetFramebufferSize()
 	gl.Viewport(0, 0, int32(fw), int32(fh))
@@ -62,10 +62,9 @@ func (win *Window) update() {
 	win.scale = 100
 }
 
-
-func initGLFW(width, height int) (*glfw.Window,  error) {
+func initGLFW(width, height int) (*glfw.Window, error) {
 	if err := glfw.Init(); err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)

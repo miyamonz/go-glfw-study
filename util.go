@@ -22,5 +22,5 @@ func readFile(path string) string {
 
 func sec() float64 {
 	now := time.Now()
-	return float64(now.UnixNano()) / float64(1000 * time.Millisecond)
+	return float64(now.UnixNano()) / float64(1000*time.Millisecond)
 }

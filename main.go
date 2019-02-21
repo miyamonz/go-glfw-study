@@ -13,7 +13,7 @@ func init() {
 }
 func main() {
 	//init glfw
-	window,err := NewWindow(600, 480)
+	window, err := NewWindow(600, 480)
 	if err != nil {
 		panic(err)
 	}
@@ -88,10 +88,8 @@ func draw(window IWindow, program uint32, drawer Drawer) {
 	glfw.PollEvents()
 }
 
-
 func printDetail() {
 	fmt.Println("OpenGL version:\t", gl.GoStr(gl.GetString(gl.VERSION)))
 	fmt.Println("GLSL version:\t", gl.GoStr(gl.GetString(gl.SHADING_LANGUAGE_VERSION)))
 	fmt.Println("GLFW version:\t", glfw.GetVersionString())
 }
-
