@@ -155,3 +155,23 @@ func orthogonal(left, right, bottom, top, zNear, zFar float32) Matrix {
 	}
 	return t
 }
+
+func frustum(left, right, bottom, top, zNear, zFar float32) Matrix {
+	dx := (right - left)
+	dy := (top - bottom)
+	dz := (zFar - zNear)
+
+	t := Matrix{}
+	if dx != 0.0 && dy != 0.0 && dz != 0.0 {
+		t.loadIdentity()
+		t.matrix[0] = 2.0 * zNear / dx
+		t.matrix[5] = 2.0 * zNear / dy
+		t.matrix[8] = (left + right) / 2
+		t.matrix[9] = (top + bottom) / 2
+		t.matrix[10] = -(zFar + zNear) / dz
+		t.matrix[11] = -1
+		t.matrix[14] = -2 * zFar * zNear / dz
+		t.matrix[15] = 0
+	}
+	return t
+}
