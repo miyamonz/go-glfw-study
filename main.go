@@ -37,6 +37,7 @@ func main() {
 	}
 
 	var mvLoc = gl.GetUniformLocation(program, gl.Str("modelview\x00"))
+	var pLoc = gl.GetUniformLocation(program, gl.Str("projection\x00"))
 
 	w, h := window.GetSize()
 	fw, fh := window.GetFramebufferSize()
@@ -70,15 +71,19 @@ func main() {
 		trans := Vec3{location[0], location[1], 0}
 		transMat := translate(trans)
 		view := lookAt(
-			Vec3{0, 0, 0},    //eye
-			Vec3{-1, -1, -1}, //gaze
+			Vec3{3, 4, 5}, //eye
+			Vec3{0, 0, 0}, //gaze
 			Vec3{0, 1, 0},
 		)
 
 		model := transMat.mult(&scaleMat)
 		modelView := view.mult(&model)
 
+		w := size[0] / s
+		h := size[1] / s
+		projection := orthogonal(-w, w, -h, h, 1, 10)
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
+		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
 
 		draw(window, program, &rect)
 	}

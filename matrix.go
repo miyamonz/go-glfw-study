@@ -137,3 +137,21 @@ func lookAt(eye, gaze, up Vec3) Matrix {
 
 	return rv.mult(&tv)
 }
+
+func orthogonal(left, right, bottom, top, zNear, zFar float32) Matrix {
+	dx := (right - left)
+	dy := (top - bottom)
+	dz := (zFar - zNear)
+
+	t := Matrix{}
+	if dx != 0.0 && dy != 0.0 && dz != 0.0 {
+		t.loadIdentity()
+		t.matrix[0] = 2.0 / dx
+		t.matrix[5] = 2.0 / dy
+		t.matrix[10] = -2.0 / dz
+		t.matrix[12] = -(right + left) / dx
+		t.matrix[13] = -(top + bottom) / dy
+		t.matrix[14] = -(zFar + zNear) / dz
+	}
+	return t
+}
