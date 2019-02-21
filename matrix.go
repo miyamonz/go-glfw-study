@@ -105,3 +105,35 @@ func rotate(a float32, v Vec3) Matrix {
 	t.matrix[10] = (1.0-n2)*c + n2
 	return t
 }
+
+func lookAt(eye, gaze, up Vec3) Matrix {
+	meye := eye.mult(-1)
+	tv := translate(meye)
+
+	// t axis = e-g
+	t := eye.sub(gaze)
+	// r axis = u cross t
+	r := up.cross(t)
+	// s axis = t cross r
+	s := t.cross(r)
+
+	rv := Matrix{}
+	rv.loadIdentity()
+
+	rlen := r.length()
+	rv.matrix[0] = r[0] / rlen
+	rv.matrix[4] = r[1] / rlen
+	rv.matrix[8] = r[2] / rlen
+
+	slen := s.length()
+	rv.matrix[1] = s[0] / slen
+	rv.matrix[5] = s[1] / slen
+	rv.matrix[9] = s[2] / slen
+
+	tlen := t.length()
+	rv.matrix[2] = t[0] / tlen
+	rv.matrix[6] = t[1] / tlen
+	rv.matrix[10] = t[2] / tlen
+
+	return rv.mult(&tv)
+}
