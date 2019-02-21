@@ -79,10 +79,9 @@ func main() {
 		model := transMat.mult(&scaleMat)
 		modelView := view.mult(&model)
 
-		w := size[0] / s
-		h := size[1] / s
-		// projection := orthogonal(-w, w, -h, h, 1, 10)
-		projection := frustum(-w, w, -h, h, 1, 10)
+		fovy := s * 0.01
+		aspect := window.getAspect()
+		projection := perspective(fovy, aspect, 1, 10)
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
 

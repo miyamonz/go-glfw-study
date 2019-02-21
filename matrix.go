@@ -175,3 +175,19 @@ func frustum(left, right, bottom, top, zNear, zFar float32) Matrix {
 	}
 	return t
 }
+
+func perspective(fovy, aspect, zNear, zFar float32) Matrix {
+	dz := (zFar - zNear)
+
+	t := Matrix{}
+	if dz != 0.0 {
+		t.loadIdentity()
+		t.matrix[5] = 1 / tan(fovy*.5)
+		t.matrix[0] = t.matrix[5] / aspect
+		t.matrix[10] = -(zFar + zNear) / dz
+		t.matrix[11] = -1
+		t.matrix[14] = -2 * zFar * zNear / dz
+		t.matrix[15] = 0
+	}
+	return t
+}
