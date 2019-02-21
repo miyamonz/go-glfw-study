@@ -7,10 +7,11 @@ import (
 
 type Window struct {
 	*glfw.Window
-	size     Vertex
-	title    string
-	scale    float32
-	location Vertex
+	size      Vertex
+	title     string
+	scale     float32
+	location  Vertex
+	keyStatus glfw.Action
 }
 
 func NewWindow(w, h int) (*Window, error) {
@@ -27,11 +28,14 @@ func NewWindow(w, h int) (*Window, error) {
 	}
 	win.SetSizeCallback(func(win *glfw.Window, w, h int) {
 		ret.resize(w, h)
-
 	})
 	win.SetScrollCallback(func(win *glfw.Window, x, y float64) {
 		ret.wheel(x, y)
 	})
+	win.SetKeyCallback(func(win *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+		ret.keyboard(key, scancode, action, mods)
+	})
+
 	return ret, nil
 }
 
@@ -43,7 +47,31 @@ func (win *Window) Destroy() {
 
 func (win *Window) SwapBuffers() {
 	win.Window.SwapBuffers()
-	glfw.WaitEvents()
+	if win.keyStatus == glfw.Release {
+		glfw.WaitEvents()
+
+	} else {
+		glfw.PollEvents()
+
+	}
+
+	//十字キーで移動
+	px := 2.0 / win.size[0]
+	py := 2.0 / win.size[1]
+	isPressing := func(key glfw.Key) bool { return win.Window.GetKey(key) != glfw.Release }
+
+	if isPressing(glfw.KeyLeft) {
+		win.location[0] -= px
+	}
+	if isPressing(glfw.KeyRight) {
+		win.location[0] += px
+	}
+	if isPressing(glfw.KeyDown) {
+		win.location[1] -= py
+	}
+	if isPressing(glfw.KeyUp) {
+		win.location[1] += py
+	}
 
 	if win.Window.GetMouseButton(glfw.MouseButton1) != glfw.Release {
 		x, y := win.Window.GetCursorPos()
@@ -62,6 +90,9 @@ func (win *Window) resize(width, height int) {
 }
 func (win *Window) wheel(xoff, yoff float64) {
 	win.scale += float32(yoff)
+}
+func (win *Window) keyboard(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+	win.keyStatus = action
 }
 
 func (win *Window) getAspect() float32 {
