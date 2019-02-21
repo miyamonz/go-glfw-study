@@ -28,7 +28,10 @@ func NewWindow(w, h int) (*Window, error) {
 	win.SetSizeCallback(func(win *glfw.Window, w, h int) {
 		ret.resize(w, h)
 
-	} )
+	})
+	win.SetScrollCallback(func(win *glfw.Window, x, y float64) {
+		ret.wheel(x, y)
+	})
 	return ret, nil
 }
 
@@ -41,10 +44,12 @@ func (win *Window) Destroy() {
 func (win *Window) SwapBuffers() {
 	win.Window.SwapBuffers()
 	glfw.WaitEvents()
-	
-	x,y := win.Window.GetCursorPos()
-	win.location[0] =  float32(x) * 2 / win.size[0] - 1
-	win.location[1] =  1 - float32(y) * 2 / win.size[1]
+
+	if win.Window.GetMouseButton(glfw.MouseButton1) != glfw.Release {
+		x, y := win.Window.GetCursorPos()
+		win.location[0] = float32(x)*2/win.size[0] - 1
+		win.location[1] = 1 - float32(y)*2/win.size[1]
+	}
 }
 
 func (win *Window) resize(width, height int) {
@@ -55,11 +60,14 @@ func (win *Window) resize(width, height int) {
 	win.size[0] = float32(width)
 	win.size[1] = float32(height)
 }
+func (win *Window) wheel(xoff, yoff float64) {
+	win.scale += float32(yoff)
+}
+
 func (win *Window) getAspect() float32 {
 	return win.size[0] / win.size[1]
 }
 func (win *Window) update() {
-	win.scale = 100
 }
 
 func initGLFW(width, height int) (*glfw.Window, error) {
