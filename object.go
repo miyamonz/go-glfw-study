@@ -10,8 +10,11 @@ type Vertex struct {
 	color    Vec3
 }
 
-func NewVertex(pos Vec3) Vertex {
-	return Vertex{position: pos, color: Vec3{0, 0, 0}}
+func NewVertex(position, color Vec3) Vertex {
+	return Vertex{
+		position: position,
+		color:    color,
+	}
 }
 
 type Object struct {
@@ -52,17 +55,18 @@ func NewObject(points []Vertex) Object {
 		vbo: createVBO(points),
 	}
 
-	// Vec3なら要素数3と各要素32bit == 4byte なので12のはず
 	vertexSize := int32(unsafe.Sizeof(points[0]))
 
 	sizePos := int32(len(points[0].position))
 	offsetPos := unsafe.Offsetof(points[0].position)
 	//func VertexAttribPointer(index uint32, size int32, xtype uint32, normalized bool, stride int32, pointer unsafe.Pointer)
 	gl.VertexAttribPointer(0, sizePos, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetPos)))
+	gl.EnableVertexAttribArray(0)
+
 	sizeColor := int32(len(points[0].color))
 	offsetColor := unsafe.Offsetof(points[0].color)
 	gl.VertexAttribPointer(1, sizeColor, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetColor)))
-	gl.EnableVertexAttribArray(0)
+	gl.EnableVertexAttribArray(1)
 
 	return obj
 }

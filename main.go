@@ -9,14 +9,14 @@ import (
 )
 
 var cubeVertex []Vertex = []Vertex{
-	NewVertex(Vec3{-1, -1, -1}),
-	NewVertex(Vec3{-1, -1, 1}),
-	NewVertex(Vec3{-1, 1, 1}),
-	NewVertex(Vec3{-1, 1, -1}),
-	NewVertex(Vec3{1, 1, -1}),
-	NewVertex(Vec3{1, -1, -1}),
-	NewVertex(Vec3{1, -1, 1}),
-	NewVertex(Vec3{1, 1, 1}),
+	NewVertex(Vec3{-1, -1, -1}, Vec3{0, 0, 0}),
+	NewVertex(Vec3{-1, -1, 1}, Vec3{0, 0, 8}),
+	NewVertex(Vec3{-1, 1, 1}, Vec3{0, .8, 0}),
+	NewVertex(Vec3{-1, 1, -1}, Vec3{0, .8, .8}),
+	NewVertex(Vec3{1, 1, -1}, Vec3{.8, 0, 0}),
+	NewVertex(Vec3{1, -1, -1}, Vec3{.8, 0, .8}),
+	NewVertex(Vec3{1, -1, 1}, Vec3{.8, .8, 0}),
+	NewVertex(Vec3{1, 1, 1}, Vec3{.8, .8, .8}),
 }
 var wireCubeIndex []uint32 = []uint32{
 	1, 0,
