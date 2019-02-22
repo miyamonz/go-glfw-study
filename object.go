@@ -8,19 +8,31 @@ type Object struct {
 	vao, vbo, ibo uint32
 }
 
+func createVAO() uint32 {
+	var vao uint32
+	gl.GenVertexArrays(1, &vao)
+	gl.BindVertexArray(vao)
+	return vao
+}
+func createVBO(data []Vec3) uint32 {
+	var vbo uint32
+	gl.GenBuffers(1, &vbo)
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
+	size := len(data) * len(data[0])
+	gl.BufferData(gl.ARRAY_BUFFER, size*4, gl.Ptr(data), gl.STATIC_DRAW)
+	return vbo
+}
+
 func NewObject(points []Vec3) Object {
 	vcount := len(points)
 	if vcount == 0 {
 		panic("points length is zero")
 	}
 	size := int32(len((points)[0]))
-	obj := Object{}
-	gl.GenVertexArrays(1, &obj.vao)
-	gl.BindVertexArray(obj.vao)
-
-	gl.GenBuffers(1, &obj.vbo)
-	gl.BindBuffer(gl.ARRAY_BUFFER, obj.vbo)
-	gl.BufferData(gl.ARRAY_BUFFER, vcount*int(size)*4, gl.Ptr(points), gl.STATIC_DRAW)
+	obj := Object{
+		vao: createVAO(),
+		vbo: createVBO(points),
+	}
 
 	gl.VertexAttribPointer(0, size, gl.FLOAT, false, 0, gl.PtrOffset(0))
 	gl.EnableVertexAttribArray(0)
