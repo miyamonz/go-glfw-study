@@ -22,6 +22,13 @@ func createVBO(data []Vec3) uint32 {
 	gl.BufferData(gl.ARRAY_BUFFER, size*4, gl.Ptr(data), gl.STATIC_DRAW)
 	return vbo
 }
+func createIBO(index []uint32) uint32 {
+	var ibo uint32
+	gl.GenBuffers(1, &ibo)
+	gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(index)*4, gl.Ptr(index), gl.STATIC_DRAW)
+	return ibo
+}
 
 func NewObject(points []Vec3) Object {
 	vcount := len(points)
@@ -40,13 +47,8 @@ func NewObject(points []Vec3) Object {
 	return obj
 }
 func NewObjectWithIndex(points []Vec3, indexes []uint32) Object {
-
 	obj := NewObject(points)
-
-	gl.GenBuffers(1, &obj.ibo)
-	gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibo)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(indexes)*4, gl.Ptr(indexes), gl.STATIC_DRAW)
-
+	obj.ibo = createIBO(indexes)
 	return obj
 }
 
