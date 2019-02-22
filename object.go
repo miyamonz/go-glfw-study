@@ -4,8 +4,6 @@ import (
 	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
-type Vertex [2]float32
-
 type Object struct {
 	vao, vbo, ibo uint32
 }

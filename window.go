@@ -5,12 +5,14 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
+type Size [2]float32
+
 type Window struct {
 	*glfw.Window
-	size      Vertex
+	size      Size
 	title     string
 	scale     float32
-	location  Vertex
+	location  Size
 	keyStatus glfw.Action
 }
 
@@ -21,10 +23,10 @@ func NewWindow(w, h int) (*Window, error) {
 	}
 	ret := &Window{
 		Window:   win,
-		size:     Vertex{float32(w), float32(h)},
+		size:     Size{float32(w), float32(h)},
 		title:    "",
 		scale:    1,
-		location: Vertex{0, 0},
+		location: Size{0, 0},
 	}
 	win.SetSizeCallback(func(win *glfw.Window, w, h int) {
 		ret.resize(w, h)
