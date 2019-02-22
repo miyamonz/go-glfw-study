@@ -56,9 +56,14 @@ func main() {
 	gl.CullFace(gl.BACK)
 	gl.Enable(gl.CULL_FACE)
 
+	//デプスバッファ
+	gl.ClearDepth(1)
+	gl.DepthFunc(gl.LESS)
+	gl.Enable(gl.DEPTH_TEST)
+
 	glfw.SetTime(0)
 	for !window.ShouldClose() {
-		gl.Clear(gl.COLOR_BUFFER_BIT)
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(program)
 		window.update()
 
