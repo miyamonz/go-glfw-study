@@ -51,6 +51,12 @@ func NewShapeIndex(points []Vertex, indexes []uint32) ShapeIndex {
 
 	return shapei
 }
+func NewSolidShapeIndex(points []Vertex, indexes []uint32) ShapeIndex {
+	shape := NewShapeIndex(points, indexes)
+	shape.mode = gl.TRIANGLES
+	return shape
+}
+
 func (s *ShapeIndex) Draw() {
 	s.object.bind()
 	gl.DrawElements(s.mode, int32(s.indexcount), gl.UNSIGNED_INT, gl.PtrOffset(0))
@@ -66,6 +72,7 @@ var cubeVertex []Vertex = []Vertex{
 	NewVertex(Vec3{1, -1, 1}, Vec3{.8, .8, 0}),
 	NewVertex(Vec3{1, 1, 1}, Vec3{.8, .8, .8}),
 }
+
 func NewCube() ShapeIndex {
 	var wireCubeIndex []uint32 = []uint32{
 		1, 0,
@@ -82,4 +89,16 @@ func NewCube() ShapeIndex {
 		6, 1,
 	}
 	return NewShapeIndex(cubeVertex, wireCubeIndex)
+}
+
+func NewSolidCube() ShapeIndex {
+	var solidCubeIndex []uint32 = []uint32{
+		0, 1, 2, 0, 2, 3, // 左
+		0, 3, 4, 0, 4, 5, // 裏
+		0, 5, 6, 0, 6, 1, // 下
+		7, 6, 5, 7, 5, 4, // 右
+		7, 4, 3, 7, 3, 2, // 上
+		7, 2, 1, 7, 1, 6, // 前
+	}
+	return NewSolidShapeIndex(cubeVertex, solidCubeIndex)
 }

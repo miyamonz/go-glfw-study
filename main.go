@@ -45,7 +45,7 @@ func main() {
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
-	cube := NewCube()
+	cube := NewSolidCube()
 	defer cube.Delete()
 
 	// draw
