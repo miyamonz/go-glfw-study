@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-gl/gl/v4.1-core/gl"
+	"reflect"
 	"unsafe"
 )
 
@@ -44,6 +45,19 @@ func createIBO(index []uint32) uint32 {
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(index)*4, gl.Ptr(index), gl.STATIC_DRAW)
 	return ibo
 }
+func registerAttr(loc uint32, v interface{}, name string) {
+	VType := reflect.TypeOf(v)
+	vertexSize := VType.Size()
+
+	attr, ok := VType.FieldByName(name)
+	if !ok {
+		panic("failed VType FieldByName:")
+	}
+	size := attr.Type.Len()
+	offset := attr.Offset
+	gl.VertexAttribPointer(loc, int32(size), gl.FLOAT, false, int32(vertexSize), gl.PtrOffset(int(offset)))
+	gl.EnableVertexAttribArray(loc)
+}
 
 func NewObject(points []Vertex) Object {
 	vcount := len(points)
@@ -55,18 +69,8 @@ func NewObject(points []Vertex) Object {
 		vbo: createVBO(points),
 	}
 
-	vertexSize := int32(unsafe.Sizeof(points[0]))
-
-	sizePos := int32(len(points[0].position))
-	offsetPos := unsafe.Offsetof(points[0].position)
-	//func VertexAttribPointer(index uint32, size int32, xtype uint32, normalized bool, stride int32, pointer unsafe.Pointer)
-	gl.VertexAttribPointer(0, sizePos, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetPos)))
-	gl.EnableVertexAttribArray(0)
-
-	sizeColor := int32(len(points[0].color))
-	offsetColor := unsafe.Offsetof(points[0].color)
-	gl.VertexAttribPointer(1, sizeColor, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetColor)))
-	gl.EnableVertexAttribArray(1)
+	registerAttr(0, Vertex{}, "position")
+	registerAttr(1, Vertex{}, "color")
 
 	return obj
 }
