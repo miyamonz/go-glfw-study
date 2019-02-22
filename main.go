@@ -58,6 +58,8 @@ func main() {
 
 	glfw.SetTime(0)
 	for !window.ShouldClose() {
+		gl.Clear(gl.COLOR_BUFFER_BIT)
+		gl.UseProgram(program)
 		window.update()
 
 		//scale matrix
@@ -77,14 +79,21 @@ func main() {
 
 		model := transMat.mult(rotMat).mult(scaleMat)
 		modelView := view.mult(model)
+		modelView2 := modelView.mult(translate(Vec3{0, 0, 3}))
 
 		fovy := float32(1)
 		aspect := window.getAspect()
 		projection := perspective(fovy, aspect, 1, 100)
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
+		cube.Draw()
 
-		draw(window, program, &cube)
+		//二つ目
+		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView2.data()[0])
+		cube.Draw()
+
+		window.SwapBuffers()
+		glfw.PollEvents()
 	}
 }
 
@@ -93,16 +102,6 @@ type IWindow interface {
 }
 type Drawer interface {
 	Draw()
-}
-
-func draw(window IWindow, program uint32, drawer Drawer) {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
-	gl.UseProgram(program)
-
-	drawer.Draw()
-
-	window.SwapBuffers()
-	glfw.PollEvents()
 }
 
 func printDetail() {
