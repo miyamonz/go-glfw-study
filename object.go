@@ -7,7 +7,7 @@ import (
 type Vertex [2]float32
 
 type Object struct {
-	vao, vbo uint32
+	vao, vbo, ibo uint32
 }
 
 func NewObject(points []Vec3) Object {
@@ -23,8 +23,19 @@ func NewObject(points []Vec3) Object {
 	gl.GenBuffers(1, &obj.vbo)
 	gl.BindBuffer(gl.ARRAY_BUFFER, obj.vbo)
 	gl.BufferData(gl.ARRAY_BUFFER, vcount*int(size)*4, gl.Ptr(points), gl.STATIC_DRAW)
+
 	gl.VertexAttribPointer(0, size, gl.FLOAT, false, 0, gl.PtrOffset(0))
 	gl.EnableVertexAttribArray(0)
+
+	return obj
+}
+func NewObjectWithIndex(points []Vec3, indexes []uint32) Object {
+
+	obj := NewObject(points)
+
+	gl.GenBuffers(1, &obj.ibo)
+	gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibo)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(indexes)*4, gl.Ptr(indexes), gl.STATIC_DRAW)
 
 	return obj
 }
@@ -32,6 +43,7 @@ func NewObject(points []Vec3) Object {
 func (obj *Object) Delete() {
 	defer gl.DeleteBuffers(1, &obj.vao)
 	defer gl.DeleteBuffers(1, &obj.vbo)
+	defer gl.DeleteBuffers(1, &obj.ibo)
 }
 
 func (obj *Object) bind() {
@@ -60,4 +72,29 @@ func (s *Shape) Draw() {
 
 func (shape *Shape) Delete() {
 	shape.object.Delete()
+}
+
+type ShapeIndex struct {
+	Shape
+	indexcount int
+	indexptr   *[]uint32
+}
+
+func NewShapeIndex(points []Vec3, indexes []uint32) ShapeIndex {
+	obj := NewObjectWithIndex(points, indexes)
+	shape := Shape{
+		object: obj,
+		vcount: len(points),
+	}
+	shapei := ShapeIndex{
+		Shape:      shape,
+		indexcount: len(indexes),
+		indexptr:   &indexes,
+	}
+
+	return shapei
+}
+func (s *ShapeIndex) Draw() {
+	s.object.bind()
+	gl.DrawElements(gl.LINES, int32(s.indexcount), gl.UNSIGNED_INT, gl.PtrOffset(0))
 }

@@ -8,19 +8,29 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-var octahedronVertex []Vec3 = []Vec3{
-	{0, 1, 0},
-	{-1, 0, 0},
-	{0, -1, 0},
-	{1, 0, 0},
-	{0, 1, 0},
-	{0, 0, 1},
-	{0, -1, 0},
-	{0, 0, -1},
-	{-1, 0, 0},
-	{0, 0, 1},
-	{1, 0, 0},
-	{0, 0, -1},
+var cubeVertex []Vec3 = []Vec3{
+	{-1, -1, -1},
+	{-1, -1, 1},
+	{-1, 1, 1},
+	{-1, 1, -1},
+	{1, 1, -1},
+	{1, -1, -1},
+	{1, -1, 1},
+	{1, 1, 1},
+}
+var wireCubeIndex []uint32 = []uint32{
+	1, 0,
+	2, 7,
+	3, 0,
+	4, 7,
+	5, 0,
+	6, 7,
+	1, 2,
+	2, 3,
+	3, 4,
+	4, 5,
+	5, 6,
+	6, 1,
 }
 
 func init() {
@@ -60,8 +70,9 @@ func main() {
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
-	octa := NewShape(octahedronVertex)
-	defer octa.Delete()
+	// cube := NewShape(cubeVertex )
+	cube := NewShapeIndex(cubeVertex, wireCubeIndex)
+	defer cube.Delete()
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
@@ -89,11 +100,11 @@ func main() {
 
 		fovy := float32(1)
 		aspect := window.getAspect()
-		projection := perspective(fovy, aspect, 1, 10)
+		projection := perspective(fovy, aspect, 1, 100)
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
 
-		draw(window, program, &octa)
+		draw(window, program, &cube)
 	}
 }
 
