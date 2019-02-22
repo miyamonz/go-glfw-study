@@ -38,7 +38,7 @@ func identity() Matrix {
 	return m
 }
 
-func (m1 *Matrix) mult(m2 *Matrix) Matrix {
+func (m1 Matrix) mult(m2 Matrix) Matrix {
 	t := Matrix{}
 
 	for i := range m1.matrix {
@@ -135,7 +135,7 @@ func lookAt(eye, gaze, up Vec3) Matrix {
 	rv.matrix[6] = t[1] / tlen
 	rv.matrix[10] = t[2] / tlen
 
-	return rv.mult(&tv)
+	return rv.mult(tv)
 }
 
 func orthogonal(left, right, bottom, top, zNear, zFar float32) Matrix {

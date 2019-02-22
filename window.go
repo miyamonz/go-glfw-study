@@ -49,13 +49,7 @@ func (win *Window) Destroy() {
 
 func (win *Window) SwapBuffers() {
 	win.Window.SwapBuffers()
-	if win.keyStatus == glfw.Release {
-		glfw.WaitEvents()
-
-	} else {
-		glfw.PollEvents()
-
-	}
+	glfw.PollEvents()
 
 	//十字キーで移動
 	px := 2.0 / win.size[0]

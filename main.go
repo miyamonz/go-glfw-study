@@ -52,6 +52,7 @@ func main() {
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
 	gl.Viewport(0, 0, int32(fw), int32(fh))
 
+	glfw.SetTime(0)
 	for !window.ShouldClose() {
 		window.update()
 
@@ -68,9 +69,10 @@ func main() {
 			Vec3{0, 0, 0}, //gaze
 			Vec3{0, 1, 0},
 		)
+		rotMat := rotate(float32(glfw.GetTime()), Vec3{0, 1, 0})
 
-		model := transMat.mult(&scaleMat)
-		modelView := view.mult(&model)
+		model := transMat.mult(rotMat).mult(scaleMat)
+		modelView := view.mult(model)
 
 		fovy := float32(1)
 		aspect := window.getAspect()
