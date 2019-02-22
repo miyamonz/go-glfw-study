@@ -50,7 +50,11 @@ func main() {
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
-	gl.Viewport(0, 0, int32(fw), int32(fh))
+
+	//カリング
+	gl.FrontFace(gl.CCW)
+	gl.CullFace(gl.BACK)
+	gl.Enable(gl.CULL_FACE)
 
 	glfw.SetTime(0)
 	for !window.ShouldClose() {
