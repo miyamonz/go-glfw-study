@@ -9,6 +9,7 @@ import (
 type Vertex struct {
 	position Vec3
 	color    Vec3
+	normal   Vec3
 }
 
 func NewVertex(position, color Vec3) Vertex {
@@ -71,6 +72,7 @@ func NewObject(points []Vertex) Object {
 
 	registerAttr(0, Vertex{}, "position")
 	registerAttr(1, Vertex{}, "color")
+	registerAttr(2, Vertex{}, "normal")
 
 	return obj
 }

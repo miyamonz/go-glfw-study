@@ -4,6 +4,7 @@ uniform mat4 projection;
 
 in vec4 position;
 in vec4 color;
+in vec4 normal;
 out vec4 vertex_color;
 void main()
 {

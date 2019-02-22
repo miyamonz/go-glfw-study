@@ -24,6 +24,7 @@ func newProgram(vSrc, fSrc string) (uint32, error) {
 
 	gl.BindAttribLocation(program, 0, gl.Str("position\x00"))
 	gl.BindAttribLocation(program, 1, gl.Str("color\x00"))
+	gl.BindAttribLocation(program, 2, gl.Str("normal\x00"))
 	gl.BindFragDataLocation(program, 0, gl.Str("fragment\x00"))
 
 	gl.LinkProgram(program)
