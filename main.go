@@ -8,15 +8,15 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-var cubeVertex []Vec3 = []Vec3{
-	{-1, -1, -1},
-	{-1, -1, 1},
-	{-1, 1, 1},
-	{-1, 1, -1},
-	{1, 1, -1},
-	{1, -1, -1},
-	{1, -1, 1},
-	{1, 1, 1},
+var cubeVertex []Vertex = []Vertex{
+	NewVertex(Vec3{-1, -1, -1}),
+	NewVertex(Vec3{-1, -1, 1}),
+	NewVertex(Vec3{-1, 1, 1}),
+	NewVertex(Vec3{-1, 1, -1}),
+	NewVertex(Vec3{1, 1, -1}),
+	NewVertex(Vec3{1, -1, -1}),
+	NewVertex(Vec3{1, -1, 1}),
+	NewVertex(Vec3{1, 1, 1}),
 }
 var wireCubeIndex []uint32 = []uint32{
 	1, 0,

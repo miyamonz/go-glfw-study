@@ -5,6 +5,15 @@ import (
 	"unsafe"
 )
 
+type Vertex struct {
+	position Vec3
+	color    Vec3
+}
+
+func NewVertex(pos Vec3) Vertex {
+	return Vertex{position: pos, color: Vec3{0, 0, 0}}
+}
+
 type Object struct {
 	vao, vbo, ibo uint32
 }
@@ -15,7 +24,7 @@ func createVAO() uint32 {
 	gl.BindVertexArray(vao)
 	return vao
 }
-func createVBO(data []Vec3) uint32 {
+func createVBO(data []Vertex) uint32 {
 	var vbo uint32
 	gl.GenBuffers(1, &vbo)
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
@@ -33,12 +42,11 @@ func createIBO(index []uint32) uint32 {
 	return ibo
 }
 
-func NewObject(points []Vec3) Object {
+func NewObject(points []Vertex) Object {
 	vcount := len(points)
 	if vcount == 0 {
 		panic("points length is zero")
 	}
-	size := int32(len((points)[0]))
 	obj := Object{
 		vao: createVAO(),
 		vbo: createVBO(points),
@@ -47,13 +55,18 @@ func NewObject(points []Vec3) Object {
 	// Vec3なら要素数3と各要素32bit == 4byte なので12のはず
 	vertexSize := int32(unsafe.Sizeof(points[0]))
 
+	sizePos := int32(len(points[0].position))
+	offsetPos := unsafe.Offsetof(points[0].position)
 	//func VertexAttribPointer(index uint32, size int32, xtype uint32, normalized bool, stride int32, pointer unsafe.Pointer)
-	gl.VertexAttribPointer(0, size, gl.FLOAT, false, vertexSize, gl.PtrOffset(0))
+	gl.VertexAttribPointer(0, sizePos, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetPos)))
+	sizeColor := int32(len(points[0].color))
+	offsetColor := unsafe.Offsetof(points[0].color)
+	gl.VertexAttribPointer(1, sizeColor, gl.FLOAT, false, vertexSize, gl.PtrOffset(int(offsetColor)))
 	gl.EnableVertexAttribArray(0)
 
 	return obj
 }
-func NewObjectWithIndex(points []Vec3, indexes []uint32) Object {
+func NewObjectWithIndex(points []Vertex, indexes []uint32) Object {
 	obj := NewObject(points)
 	obj.ibo = createIBO(indexes)
 	return obj
@@ -74,7 +87,7 @@ type Shape struct {
 	vcount int
 }
 
-func NewShape(points []Vec3) Shape {
+func NewShape(points []Vertex) Shape {
 	obj := NewObject(points)
 	shape := Shape{
 		object: obj,
@@ -99,7 +112,7 @@ type ShapeIndex struct {
 	indexptr   *[]uint32
 }
 
-func NewShapeIndex(points []Vec3, indexes []uint32) ShapeIndex {
+func NewShapeIndex(points []Vertex, indexes []uint32) ShapeIndex {
 	obj := NewObjectWithIndex(points, indexes)
 	shape := Shape{
 		object: obj,
