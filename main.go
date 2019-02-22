@@ -8,31 +8,6 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
-var cubeVertex []Vertex = []Vertex{
-	NewVertex(Vec3{-1, -1, -1}, Vec3{0, 0, 0}),
-	NewVertex(Vec3{-1, -1, 1}, Vec3{0, 0, 8}),
-	NewVertex(Vec3{-1, 1, 1}, Vec3{0, .8, 0}),
-	NewVertex(Vec3{-1, 1, -1}, Vec3{0, .8, .8}),
-	NewVertex(Vec3{1, 1, -1}, Vec3{.8, 0, 0}),
-	NewVertex(Vec3{1, -1, -1}, Vec3{.8, 0, .8}),
-	NewVertex(Vec3{1, -1, 1}, Vec3{.8, .8, 0}),
-	NewVertex(Vec3{1, 1, 1}, Vec3{.8, .8, .8}),
-}
-var wireCubeIndex []uint32 = []uint32{
-	1, 0,
-	2, 7,
-	3, 0,
-	4, 7,
-	5, 0,
-	6, 7,
-	1, 2,
-	2, 3,
-	3, 4,
-	4, 5,
-	5, 6,
-	6, 1,
-}
-
 func init() {
 	runtime.LockOSThread()
 }
@@ -70,8 +45,7 @@ func main() {
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
-	// cube := NewShape(cubeVertex )
-	cube := NewShapeIndex(cubeVertex, wireCubeIndex)
+	cube := NewCube()
 	defer cube.Delete()
 
 	// draw
