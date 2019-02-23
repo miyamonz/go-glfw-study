@@ -20,7 +20,7 @@ func NewSphere() ShapeIndex {
 			x := r * sin(2*math.Pi*s)
 
 			pos := Vec3{x, y, z}
-			color := Vec3{0.5, 0.8, 0.5}
+			color := Vec3{1, 1, 1}
 			v := NewVertexN(pos, color, pos)
 			vs = append(vs, v)
 
