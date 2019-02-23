@@ -46,8 +46,8 @@ func main() {
 	fmt.Printf("width: %d, height: %d\n", w, h)
 	fmt.Printf("frame buffer width: %d, frame buffer height: %d\n", fw, fh)
 
-	cube := NewSolidCubeNormal()
-	defer cube.Delete()
+	shape := NewSphere()
+	defer shape.Delete()
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
@@ -94,14 +94,14 @@ func main() {
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
 		gl.UniformMatrix4fv(nLoc, 1, false, &normalMat[0])
-		cube.Draw()
+		shape.Draw()
 
 		//二つ目
 		modelView2 := modelView.mult(translate(Vec3{0, 0, 3}))
 		normalMat2 := modelView2.getNormalMat()
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView2.data()[0])
 		gl.UniformMatrix3fv(nLoc, 1, false, &normalMat2[0])
-		cube.Draw()
+		shape.Draw()
 
 		window.SwapBuffers()
 		glfw.PollEvents()
