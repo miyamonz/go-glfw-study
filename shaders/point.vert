@@ -3,10 +3,11 @@ uniform mat4 modelview;
 uniform mat4 projection;
 uniform mat3 normalMatrix;
 
-uniform vec4 Lpos = vec4(0.0, 0.0, 5.0, 1.0);
-uniform vec3 Lamb = vec3(0.2);
-uniform vec3 Ldiff = vec3(1.0);
-uniform vec3 Lspec = vec3(1.0);
+const int Lcount = 2;
+uniform vec4 Lpos[Lcount];
+uniform vec3 Lamb[Lcount];
+uniform vec3 Ldiff[Lcount];
+uniform vec3 Lspec[Lcount];
 
 const vec3 Kamb = vec3(0.6, 0.6, 0.2);
 /* const vec3 Kdiff = vec3(0.0, 0.6, 0.2); */
@@ -23,14 +24,16 @@ void main()
 {
     vec4 P = modelview * position;
     vec3 N = normalize(normalMatrix * normal);
-    vec3 L = normalize((Lpos * P.w - P * Lpos.w).xyz);
-    vec3 Iamb = Kamb * Lamb;
-    Idiff = max(dot(N, L), 0.0) * color.rgb * Ldiff  + Iamb;
-
     vec3 V = -normalize(P.xyz);
-    vec3 H = normalize(L + V);
-    vec3 R = reflect(-L, N);
-    Ispec = pow(max(dot(N, H), 0.0), Kshi) * Kspec * Lspec;
+    Idiff = vec3(0);
+    Ispec = vec3(0);
+    for( int i = 0; i<Lcount; ++i ) {
+        vec3 L = normalize((Lpos[i] * P.w - P * Lpos[i].w).xyz);
+        vec3 Iamb = Kamb * Lamb[i];
+        Idiff += max(dot(N, L), 0.0) * color.rgb * Ldiff[i]  + Iamb;
+        vec3 H = normalize(L + V);
+        Ispec += pow(max(dot(N, H), 0.0), Kshi) * Kspec * Lspec[i];
+    }
 
     vertex_color = color;
     gl_Position = projection * P;

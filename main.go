@@ -55,10 +55,23 @@ func main() {
 	defer shape.Delete()
 
 	//光源
-	Lpos := Vec4{0, 0, 5, 1}
-	Lamb := []float32{0.2, 0.1, 0.1}
-	Ldiff := []float32{1.0, 0.5, 0.5}
-	Lspec := []float32{1.0, 0.5, 0.5}
+	Lcount := 2
+	Lpos := []Vec4{
+		{0, 0, 5, 1},
+		{8, 0, 1, 1},
+	}
+	Lamb := []Vec3{
+		{0.2, 0.1, 0.1},
+		{0.1, 0.1, 0.1},
+	}
+	Ldiff := []Vec3{
+		{1.0, 0.5, 0.5},
+		{0.9, 0.9, 0.9},
+	}
+	Lspec := []Vec3{
+		{1.0, 0.5, 0.5},
+		{0.9, 0.9, 0.9},
+	}
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
@@ -115,11 +128,14 @@ func main() {
 		shape.Draw()
 
 		//光源
-		viewLpos := view.mul4x1(Lpos)
-		gl.Uniform4fv(LposLoc, 1, &viewLpos[0])
-		gl.Uniform3fv(LambLoc, 1, &Lamb[0])
-		gl.Uniform3fv(LdiffLoc, 1, &Ldiff[0])
-		gl.Uniform3fv(LspecLoc, 1, &Lspec[0])
+
+		for i := 0; i < Lcount; i++ {
+			viewLpos := view.mul4x1(Lpos[i])
+			gl.Uniform4fv(LposLoc+int32(i), 1, &viewLpos[0])
+			gl.Uniform3fv(LambLoc, int32(Lcount), &Lamb[0][0])
+			gl.Uniform3fv(LdiffLoc, int32(Lcount), &Ldiff[0][0])
+			gl.Uniform3fv(LspecLoc, int32(Lcount), &Lspec[0][0])
+		}
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
