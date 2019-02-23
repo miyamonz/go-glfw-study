@@ -18,6 +18,13 @@ func NewVertex(position, color Vec3) Vertex {
 		color:    color,
 	}
 }
+func NewVertexN(position, color, normal Vec3) Vertex {
+	return Vertex{
+		position: position,
+		color:    color,
+		normal:   normal,
+	}
+}
 
 type Object struct {
 	vao, vbo, ibo uint32
