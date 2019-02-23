@@ -55,7 +55,7 @@ func main() {
 	defer shape.Delete()
 
 	//光源
-	Lpos := []float32{0, 0, 5, 1}
+	Lpos := Vec4{0, 0, 5, 1}
 	Lamb := []float32{0.2, 0.1, 0.1}
 	Ldiff := []float32{1.0, 0.5, 0.5}
 	Lspec := []float32{1.0, 0.5, 0.5}
@@ -78,12 +78,6 @@ func main() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(program)
 		window.update()
-
-		//光源
-		gl.Uniform4fv(LposLoc, 1, &Lpos[0])
-		gl.Uniform3fv(LambLoc, 1, &Lamb[0])
-		gl.Uniform3fv(LdiffLoc, 1, &Ldiff[0])
-		gl.Uniform3fv(LspecLoc, 1, &Lspec[0])
 
 		//scale matrix
 		s := window.scale * 2
@@ -120,6 +114,12 @@ func main() {
 		gl.UniformMatrix3fv(nLoc, 1, false, &normalMat2[0])
 		shape.Draw()
 
+		//光源
+		viewLpos := view.mul4x1(Lpos)
+		gl.Uniform4fv(LposLoc, 1, &viewLpos[0])
+		gl.Uniform3fv(LambLoc, 1, &Lamb[0])
+		gl.Uniform3fv(LdiffLoc, 1, &Ldiff[0])
+		gl.Uniform3fv(LspecLoc, 1, &Lspec[0])
 		window.SwapBuffers()
 		glfw.PollEvents()
 	}
