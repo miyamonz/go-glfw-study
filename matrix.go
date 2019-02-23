@@ -72,6 +72,19 @@ func (m1 Matrix) mult(m2 Matrix) Matrix {
 	return t
 }
 
+func (m1 Matrix) mul4x1(v Vec4) Vec4 {
+	t := Vec4{}
+	m := m1.data()
+	for i := 0; i < 4; i++ {
+		t[i] =
+			m[0+i]*v[0] +
+				m[4+i]*v[1] +
+				m[8+i]*v[2] +
+				m[12+i]*v[3]
+	}
+	return t
+}
+
 func translate(v Vec3) Matrix {
 	t := Matrix{}
 	t.loadIdentity()

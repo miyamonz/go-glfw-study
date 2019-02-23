@@ -1,6 +1,7 @@
 package main
 
 type Vec3 [3]float32
+type Vec4 [4]float32
 
 func (v *Vec3) add(v2 Vec3) Vec3 {
 	return Vec3{
