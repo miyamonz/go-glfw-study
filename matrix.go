@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+type Mat3 [9]float32
+
 type Matrix struct {
 	matrix [16]float32
 }
@@ -36,6 +38,21 @@ func identity() Matrix {
 	m := Matrix{}
 	m.loadIdentity()
 	return m
+}
+
+func (m1 Matrix) getNormalMat() Mat3 {
+	m := m1.data()
+	r := Mat3{}
+	r[0] = m[5]*m[10] - m[6]*m[9]
+	r[1] = m[6]*m[8] - m[4]*m[10]
+	r[2] = m[4]*m[9] - m[5]*m[8]
+	r[3] = m[9]*m[2] - m[10]*m[1]
+	r[4] = m[10]*m[0] - m[8]*m[2]
+	r[5] = m[8]*m[1] - m[9]*m[0]
+	r[6] = m[1]*m[6] - m[2]*m[5]
+	r[7] = m[2]*m[4] - m[0]*m[6]
+	r[8] = m[0]*m[5] - m[1]*m[4]
+	return r
 }
 
 func (m1 Matrix) mult(m2 Matrix) Matrix {

@@ -38,6 +38,7 @@ func main() {
 
 	var mvLoc = gl.GetUniformLocation(program, gl.Str("modelview\x00"))
 	var pLoc = gl.GetUniformLocation(program, gl.Str("projection\x00"))
+	var nLoc = gl.GetUniformLocation(program, gl.Str("normalMatrix\x00"))
 
 	w, h := window.GetSize()
 	fw, fh := window.GetFramebufferSize()
@@ -84,17 +85,22 @@ func main() {
 
 		model := transMat.mult(rotMat).mult(scaleMat)
 		modelView := view.mult(model)
-		modelView2 := modelView.mult(translate(Vec3{0, 0, 3}))
 
 		fovy := float32(1)
 		aspect := window.getAspect()
 		projection := perspective(fovy, aspect, 1, 100)
+
+		normalMat := modelView.getNormalMat()
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView.data()[0])
 		gl.UniformMatrix4fv(pLoc, 1, false, &projection.data()[0])
+		gl.UniformMatrix4fv(nLoc, 1, false, &normalMat[0])
 		cube.Draw()
 
 		//二つ目
+		modelView2 := modelView.mult(translate(Vec3{0, 0, 3}))
+		normalMat2 := modelView2.getNormalMat()
 		gl.UniformMatrix4fv(mvLoc, 1, false, &modelView2.data()[0])
+		gl.UniformMatrix3fv(nLoc, 1, false, &normalMat2[0])
 		cube.Draw()
 
 		window.SwapBuffers()
