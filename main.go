@@ -40,6 +40,11 @@ func main() {
 	var pLoc = gl.GetUniformLocation(program, gl.Str("projection\x00"))
 	var nLoc = gl.GetUniformLocation(program, gl.Str("normalMatrix\x00"))
 
+	var LposLoc = gl.GetUniformLocation(program, gl.Str("Lpos\x00"))
+	var LambLoc = gl.GetUniformLocation(program, gl.Str("Lamb\x00"))
+	var LdiffLoc = gl.GetUniformLocation(program, gl.Str("Ldiff\x00"))
+	var LspecLoc = gl.GetUniformLocation(program, gl.Str("Lspec\x00"))
+
 	w, h := window.GetSize()
 	fw, fh := window.GetFramebufferSize()
 	fmt.Println("aspect ratio: ", window.getAspect())
@@ -48,6 +53,12 @@ func main() {
 
 	shape := NewSphere()
 	defer shape.Delete()
+
+	//光源
+	Lpos := []float32{0, 0, 5, 1}
+	Lamb := []float32{0.2, 0.1, 0.1}
+	Ldiff := []float32{1.0, 0.5, 0.5}
+	Lspec := []float32{1.0, 0.5, 0.5}
 
 	// draw
 	gl.ClearColor(1.0, 1.0, 1.0, 1.0)
@@ -67,6 +78,12 @@ func main() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(program)
 		window.update()
+
+		//光源
+		gl.Uniform4fv(LposLoc, 1, &Lpos[0])
+		gl.Uniform3fv(LambLoc, 1, &Lamb[0])
+		gl.Uniform3fv(LdiffLoc, 1, &Ldiff[0])
+		gl.Uniform3fv(LspecLoc, 1, &Lspec[0])
 
 		//scale matrix
 		s := window.scale * 2
